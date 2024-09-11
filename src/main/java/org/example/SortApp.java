@@ -82,7 +82,7 @@ public class SortApp extends JFrame {
         });
 
         sortButton.addActionListener(e -> {
-            quickSort(numbers, 0, numbers.length - 1);
+            quickSort(numbers, 0, numbers.length - 1, isDescending);
             isDescending = !isDescending;
             updateNumberButtons(numbersPanel);
         });
@@ -141,24 +141,19 @@ public class SortApp extends JFrame {
         numbersPanel.repaint();
     }
 
-    private void quickSort(int[] arr, int low, int high) {
+    private void quickSort(int[] arr, int low, int high, boolean descending) {
         if (low < high) {
-            int pi = partition(arr, low, high);
-
-            quickSort(arr, low, pi - 1);
-            quickSort(arr, pi + 1, high);
-        }
-
-        if (!isDescending) {
-            reverseArray(arr);
+            int pi = partition(arr, low, high, descending);
+            quickSort(arr, low, pi - 1, descending);
+            quickSort(arr, pi + 1, high, descending);
         }
     }
 
-    private int partition(int[] arr, int low, int high) {
+    private int partition(int[] arr, int low, int high, boolean descending) {
         int pivot = arr[high];
         int i = low - 1;
         for (int j = low; j < high; j++) {
-            if (arr[j] > pivot) {
+            if (descending ? arr[j] > pivot : arr[j] < pivot) {
                 i++;
                 int temp = arr[i];
                 arr[i] = arr[j];
@@ -171,16 +166,5 @@ public class SortApp extends JFrame {
         arr[high] = temp;
 
         return i + 1;
-    }
-
-    private void reverseArray(int[] arr) {
-        int start = 0, end = arr.length - 1;
-        while (start < end) {
-            int temp = arr[start];
-            arr[start] = arr[end];
-            arr[end] = temp;
-            start++;
-            end--;
-        }
     }
 }
